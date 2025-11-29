@@ -1,0 +1,40 @@
+services:
+  # PHP-FPM container for running the app
+  workspace:
+    build:
+      context: .
+      args:
+        PHP_VERSION: ${PHP_VERSION:-8.2}
+        APT_PACKAGES: ${APT_PACKAGES}
+    image: php:${PHP_VERSION:-8.2}-fpm
+    container_name: workspace
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    volumes:
+      - ${PROJECT_DIR}:/var/www
+    ports:
+      - "9000:9000"
+    networks:
+      - larabox
+
+  # Nginx container for serving the app
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ${PROJECT_DIR}:/var/www
+      # - ${NGINX_HOST_LOG_PATH}:/var/log/nginx             # Uncomment this line for troubleshooting
+      - ${NGINX_SITES_PATH}:/etc/nginx/sites-available
+      - ${NGINX_SSL_PATH}:/etc/nginx/ssl
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+      - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
+    depends_on:
+      - workspace
+    networks:
+      - larabox
+networks:
+  larabox:
+    driver: bridge
+
