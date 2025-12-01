@@ -59,7 +59,7 @@ when you run larabox, you can go to the browser and enter `http://laravel-one.lo
 
 This is especially usefully if you have more than one project that needs to talk to each other, or you work in a consultancy or a team with a few similar projects.
 
-It's also just a great starting place for your own custom Docker setup
+It's also just a great starting place for your own custom Docker setup, or if you have junior developers that you just want it to work for.
 ___
 
 # Before Starting
