@@ -1,6 +1,5 @@
 # PHP Version Argument
 ARG PHP_VERSION=${PHP_VERSION}
-ARG APT_PACKAGES=${APT_PACKAGES}
 
 # Base image with PHP
 FROM php:${PHP_VERSION}-fpm
@@ -14,8 +13,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     && docker-php-ext-configure zip \
-    && docker-php-ext-install zip pdo pdo_mysql gd \
-    && rm -rf /var/lib/apt/lists/*
+    && docker-php-ext-install zip pdo pdo_mysql gd
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -27,6 +25,12 @@ RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && apt-get update
 
 # Set working directory to /var/www
 WORKDIR /var/www
+
+RUN if [ -n ${APT_PACKAGES} ]; then \
+      apt-get update && \
+      apt-get install -y ${APT_PACKAGES} && \
+      apt-get clean && rm -rf /var/lib/apt/lists/*; \
+    fi
 
 # Copy apps into the container
 COPY ${PROJECT_DIR} /var/www
