@@ -1,7 +1,7 @@
 # Larabox
 
 > Author: Aaron Mangan
-> Version: 0.1.0
+> Version: 0.1.0 [December 2025]
 > Supports: PHP (>= 7.4) | Nginx | MySQL (8) | SQLite (?)
 
 > [https://github.com/AaronMangan/larabox.git](https://github.com/AaronMangan/larabox.git)
