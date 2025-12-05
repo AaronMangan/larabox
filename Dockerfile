@@ -24,7 +24,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && apt-get update && apt-get install -y nodejs && npm install -g npm@latest
 
 # Set working directory to /var/www
-WORKDIR /var/www
+WORKDIR /var/www/html
 
 RUN if [ -n ${APT_PACKAGES} ]; then \
       apt-get update && \
@@ -33,9 +33,9 @@ RUN if [ -n ${APT_PACKAGES} ]; then \
     fi
 
 # Copy apps into the container
-COPY ${PROJECT_DIR} /var/www
+COPY ${PROJECT_DIR} /var/www/html
 
-RUN chmod -R 755 /var/www && chown -R www-data:www-data /var/www
+RUN chmod -R 755 /var/www/html && chown -R www-data:www-data /var/www/html
 
 # Expose port 9000 and start php-fpm
 EXPOSE 9000
