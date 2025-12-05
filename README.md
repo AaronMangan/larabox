@@ -118,3 +118,17 @@ Access a container with: `docker exec -it <container-name> /bin/bash`:
 # Adding Services
 
 Services can be added just like any regular Docker setup, just edit the `docker-compose.yml` file with what you need.
+
+## Pro Tip
+
+> You may need to add the following block to your `vite.config.js` file:
+
+```js
+    server: { 
+        hmr: {
+            host: 'localhost',
+        },
+    },
+```
+
+And occasionally, I need to run `npm run dev` and then delete the `hot` file in the public directory.
