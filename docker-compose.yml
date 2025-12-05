@@ -11,7 +11,7 @@ services:
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     volumes:
-      - ${PROJECT_DIR}:/var/www
+      - ${PROJECT_DIR}:/var/www/html
     ports:
       - "9000:9000"
     networks:
@@ -36,34 +36,35 @@ services:
       - larabox
   mysql:
     image: "mysql/mysql-server:8.0"
+    container_name: mysql
     ports:
-        - "${FORWARD_DB_PORT:-3306}:3306"
+      - "${FORWARD_DB_PORT:-3306}:3306"
     environment:
-        MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
-        MYSQL_ROOT_HOST: "${MYSQL_ROOT_HOST}"
-        MYSQL_USER: "${DB_USERNAME}"
-        MYSQL_PASSWORD: "${DB_PASSWORD}"
-        MYSQL_ALLOW_EMPTY_PASSWORD: 1
-        MYSQL_EXTRA_OPTIONS: "${MYSQL_EXTRA_OPTIONS}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_ROOT_HOST: "${MYSQL_ROOT_HOST}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_EXTRA_OPTIONS: "${MYSQL_EXTRA_OPTIONS}"
     volumes:
-        - "mysql:/var/lib/mysql"
+      - "mysql:/var/lib/mysql"
     networks:
-        - larabox
+      - larabox
     healthcheck:
-        test:
-            - CMD
-            - mysqladmin
-            - ping
-            - "-p${DB_PASSWORD}"
-        retries: 3
-        timeout: 5s
-  mailpit:
-      image: axllent/mailpit:latest
-      container_name: mailpit
-      restart: unless-stopped
-      ports:
-          - "8025:8025" # Web UI
-          - "1025:1025" # SMTP
+      test:
+        - CMD
+        - mysqladmin
+        - ping
+        - "-p${DB_PASSWORD}"
+      retries: 3
+      timeout: 5s
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog
+    restart: unless-stopped
+    ports:
+        - "8025:8025" # Web UI
+        - "1025:1025" # SMTP
 networks:
   larabox:
     driver: bridge
