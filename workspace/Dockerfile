@@ -1,5 +1,6 @@
 # PHP Version Argument
 ARG PHP_VERSION=${PHP_VERSION}
+ARG PROJECT_DIR=${PROJECT_DIR}
 
 # Base image with PHP
 FROM php:${PHP_VERSION}-fpm

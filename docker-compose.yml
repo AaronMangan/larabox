@@ -2,6 +2,7 @@ services:
   # PHP-FPM container for running the app
   workspace:
     build:
+      dockerfile: ./workspace/Dockerfile
       context: .
       args:
         PHP_VERSION: ${PHP_VERSION:-8.2}
