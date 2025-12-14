@@ -132,3 +132,17 @@ Services can be added just like any regular Docker setup, just edit the `docker-
 ```
 
 And occasionally, I need to run `npm run dev` and then delete the `hot` file in the public directory.
+
+___
+
+# Updates
+
+> [!NOTE]
+> I am slowly adding commands to the executable. Currently the available commands are:
+
+| Command | Description |
+|-----:|---------------|
+| `php box.phar set-projects` | Sets the folder where your apps are lcoated |
+| `php box.pahr set-database` | Change the database driver to your preferred service |
+| `php box.phar start` | Starts the service (experimental) |
+
