@@ -1,75 +1,63 @@
 services:
-  # PHP-FPM container for running the app
   workspace:
+    container_name: workspace
     build:
       dockerfile: ./workspace/Dockerfile
-      context: .
       args:
+        PROJECT_DIR: ${PROJECT_DIR}
         PHP_VERSION: ${PHP_VERSION:-8.2}
         APT_PACKAGES: ${APT_PACKAGES}
-    image: php:${PHP_VERSION:-8.2}-fpm
-    container_name: workspace
-    extra_hosts:
-      - 'host.docker.internal:host-gateway'
-    volumes:
-      - ${PROJECT_DIR}:/var/www/html
-    ports:
-      - "9000:9000"
-    networks:
-      - larabox
-
-  # Nginx container for serving the app
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    volumes:
-      # - ${NGINX_HOST_LOG_PATH}:/var/log/nginx                         # Uncomment this line for troubleshooting
-      # - ${NGINX_SITES_PATH}:/etc/nginx/sites-available                # Uncomment if you want to use individual site files.
-      # - ${NGINX_SSL_PATH}:/etc/nginx/ssl                              # Uncomment to serve SSL certificates locally.
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/larabox.conf:/etc/nginx/conf.d/default.conf
+        DB_DRIVER: ${DB_DRIVER:-sqlite}
     ports:
       - "80:80"
-      - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
-    depends_on:
-      - workspace
+    volumes:
+      # Project File Mounts
+      - ${PROJECT_DIR}:/var/www/html
+      
+      # Nginx Mounts
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # Mount the custom NGINX configuration file
+      # - ./default.conf:/etc/nginx/sites-available/default  # Mount the default site configuration
+      - ./nginx/larabox.conf:/etc/nginx/conf.d/default.conf
+      
+      # Mount custom PHP configuration
+      - ./php/larabox.ini:/usr/local/etc/php/conf.d/php.ini                 
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
     networks:
       - larabox
+  
+  # MySQL Database Container.
   mysql:
-    image: "mysql/mysql-server:8.0"
     container_name: mysql
+    image: mysql:5.7
     ports:
       - "${FORWARD_DB_PORT:-3306}:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
-      MYSQL_ROOT_HOST: "${MYSQL_ROOT_HOST}"
-      MYSQL_USER: "${MYSQL_USER}"
-      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
-      MYSQL_ALLOW_EMPTY_PASSWORD: 1
-      MYSQL_EXTRA_OPTIONS: "${MYSQL_EXTRA_OPTIONS}"
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
+      MYSQL_ROOT_HOST: "${DB_ROOT_HOST}"
+      MYSQL_USER: "${DB_USER}"
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "${DB_ALLOW_EMPTY_PASSWORD}"
+      MYSQL_EXTRA_OPTIONS: "${DB_EXTRA_OPTIONS}"
     volumes:
-      - "mysql:/var/lib/mysql"
+      - data:/var/lib/mysql
     networks:
       - larabox
-    healthcheck:
-      test:
-        - CMD
-        - mysqladmin
-        - ping
-        - "-p${DB_PASSWORD}"
-      retries: 3
-      timeout: 5s
+    depends_on:
+      - workspace
+  
+  # MailHog Container to test emails.
   mailhog:
     image: mailhog/mailhog:latest
     container_name: mailhog
     restart: unless-stopped
     ports:
-        - "8025:8025" # Web UI
-        - "1025:1025" # SMTP
+      - "8025:8025" # Web UI
+      - "1025:1025" # SMTP
+
 networks:
   larabox:
     driver: bridge
 
 volumes:
-  mysql:
-    driver: local
+  data:
