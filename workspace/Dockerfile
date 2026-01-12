@@ -20,7 +20,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && apt-get update && apt-get install -y nodejs && npm install -g npm@latest
 
 # Install NGINX and configure.
-RUN apt-get update && apt-get install -y nginx
+RUN apt-get update && apt-get install -y nginx git zip
 
 # Install DB Driver Extensions.
 RUN set -e; \

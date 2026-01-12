@@ -9,7 +9,8 @@ services:
         APT_PACKAGES: ${APT_PACKAGES}
         DB_DRIVER: ${DB_DRIVER:-sqlite}
     ports:
-      - "80:80"
+      - "${APP_PORT:-80}:80"
+      - "${VITE_PORT:-5173}:${VITE_PORT:-5173}"
     volumes:
       # Project File Mounts
       - ${PROJECT_DIR}:/var/www/html
@@ -25,7 +26,6 @@ services:
       - 'host.docker.internal:host-gateway'
     networks:
       - larabox
-  
   # MySQL Database Container.
   mysql:
     container_name: mysql
@@ -33,31 +33,25 @@ services:
     ports:
       - "${FORWARD_DB_PORT:-3306}:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD}"
-      MYSQL_ROOT_HOST: "${DB_ROOT_HOST}"
-      MYSQL_USER: "${DB_USER}"
-      MYSQL_PASSWORD: "${DB_PASSWORD}"
-      MYSQL_ALLOW_EMPTY_PASSWORD: "${DB_ALLOW_EMPTY_PASSWORD}"
-      MYSQL_EXTRA_OPTIONS: "${DB_EXTRA_OPTIONS}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_ROOT_HOST: "${MYSQL_ROOT_HOST}"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "${MYSQL_ALLOW_EMPTY_PASSWORD}"
+      MYSQL_EXTRA_OPTIONS: "${MYSQL_EXTRA_OPTIONS}"
     volumes:
       - data:/var/lib/mysql
     networks:
       - larabox
     depends_on:
       - workspace
-  
   # MailHog Container to test emails.
   mailhog:
     image: mailhog/mailhog:latest
     container_name: mailhog
-    restart: unless-stopped
     ports:
       - "8025:8025" # Web UI
       - "1025:1025" # SMTP
-
 networks:
   larabox:
     driver: bridge
-
 volumes:
   data:
