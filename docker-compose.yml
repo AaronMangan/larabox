@@ -9,7 +9,7 @@ services:
         APT_PACKAGES: ${APT_PACKAGES}
         DB_DRIVER: ${DB_DRIVER:-sqlite}
     ports:
-      - "${APP_PORT:-80}:80"
+      - "${APP_PORT:-80}:${APP_PORT:-80}"
       - "${VITE_PORT:-5173}:${VITE_PORT:-5173}"
     volumes:
       # Project File Mounts
@@ -50,6 +50,8 @@ services:
     ports:
       - "8025:8025" # Web UI
       - "1025:1025" # SMTP
+    networks:
+      - larabox
 networks:
   larabox:
     driver: bridge
