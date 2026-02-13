@@ -22,6 +22,9 @@ RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && apt-get update
 # Install NGINX and configure.
 RUN apt-get update && apt-get install -y nginx git zip
 
+# Install Pctnl extension for PHP process control
+RUN docker-php-ext-install pcntl
+
 # Install DB Driver Extensions.
 RUN set -e; \
     echo "DB_DRIVER=$DB_DRIVER"; \
