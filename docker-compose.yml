@@ -13,7 +13,7 @@ services:
       - "${VITE_PORT:-5173}:${VITE_PORT:-5173}"
     volumes:
       # Project File Mounts
-      - ${PROJECT_DIR}:/var/www/html
+      - ${PROJECT_DIR}:${CONTAINER_DEST:-/var/www/html}
       
       # Nginx Mounts
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # Mount the custom NGINX configuration file
@@ -26,6 +26,7 @@ services:
       - 'host.docker.internal:host-gateway'
     networks:
       - larabox
+
   # MySQL Database Container.
   mysql:
     container_name: mysql
@@ -43,6 +44,7 @@ services:
       - larabox
     depends_on:
       - workspace
+
   # MailHog Container to test emails.
   mailhog:
     image: mailhog/mailhog:latest

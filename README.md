@@ -1,7 +1,7 @@
 # Larabox
 
 > Author: Aaron Mangan
-> Version: 0.1.0 [December 2025]
+> Version: 1.0.0 [December 2025]
 > Supports: PHP (>= 7.4) | Nginx | MySQL (8) | SQLite (?)
 
 > [https://github.com/AaronMangan/larabox.git](https://github.com/AaronMangan/larabox.git)
@@ -64,15 +64,16 @@ ___
 
 # Before Starting
 
-Larabox can really be installed where, though I recommend the setup pictured above which allows you to keep all your Laravel projects in one place and ready to serve.
+Larabox can really be installed anywhere, though I recommend the setup pictured above which allows you to keep all your Laravel projects in one place and ready to serve.
 
-You may of course do whatever you like but remember to update the `docker-compose.yml` file if you need to have multiple directories. Just make sure all your projects are sent to the `/var/www/` folder.
+You may, of course, do whatever you like but remember to update the `docker-compose.yml` file if you need to have multiple directories. Just make sure all your projects are sent to the `/var/www/html` folder.
 
 ```
   - var
     - www
-      - laravel-one
-      - laravel-two
+      - html
+        - laravel-one
+        - laravel-two
 ```
 
 # Installation
@@ -88,7 +89,7 @@ There are a few way to start larabox, if you want every service try:
     docker-compose up -d --build
 ```
 
-otherwise, if you arent using mysql, try:
+otherwise, if you aren't using mysql, try:
 
 ```shell
     cd larabox
@@ -102,6 +103,8 @@ or
 ```
 
 # Using Larabox
+
+> **NOTE:** Larabox comes equiped with two switchable database providers: SQLite & MySQL. SQLite is installed in the workspace app and you can use SQLite Studio to examine it. MySQL uses it's own service (mysql) and can be examined using TablePlus, MySQL Workbench, etc.
 
 **If you are familiar with Docker than it's all the same here**
 
