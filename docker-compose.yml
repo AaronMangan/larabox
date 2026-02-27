@@ -54,6 +54,8 @@ services:
       - "1025:1025" # SMTP
     networks:
       - larabox
+    depends_on:
+      - workspace
 networks:
   larabox:
     driver: bridge
