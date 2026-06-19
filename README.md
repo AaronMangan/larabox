@@ -14,11 +14,13 @@ Larabox is an project that uses Docker to serve Laravel projects (or other PHP p
 
 Yep, and it has EVERYTHING - if you need something that isn't the default service I highly recommend it!
 
+But, Larabox is a managed environment, where default conventions are used to provide a consistent experience and platform to serve your PHP projects from. If you want to have an environment that is setup and just works, and allows multiple Laravel apps to run - try Larabox!
+
 ## So: why Larabox?
 
 Well, I wanted something that just had what I needed - all the Laravel apps that I used have been the standard Nginx, MySQL, PHP and LaraDock comes with a lot of extras. Another reason is that, in Laradock, you need a separate nginx conf file for each app - even if they're identical, except the server name.
 
-## Wait, so you dont need that here?
+## Wait, so you don't need that here?
 
 Nope, with Larabox all Laravel apps in the configured directory are served using the folder name as the TLD!
 
@@ -122,17 +124,23 @@ Access a container with: `docker exec -it <container-name> /bin/bash`:
 
 Services can be added just like any regular Docker setup, just edit the `docker-compose.yml` file with what you need.
 
-## Pro Tip
+## Pro Tips
 
 > You may need to add the following block to your `vite.config.js` file:
 
 ```js
-    server: { 
-        hmr: {
-            host: 'localhost',
-        },
-    },
+server: {
+  host: true,
+  port: 5173,
+},
 ```
 
 And occasionally, I need to run `npm run dev` and then delete the `hot` file in the public directory.
 
+**Setup Bash Aliases**
+
+If you're working in Linux or MacOS I recommend adding a bash aliases to make your life easier:
+
+`alias box="docker exec -it workspace /bin/bash"`
+
+This will allow you to connect to your larabox to run artisan commands etc.
